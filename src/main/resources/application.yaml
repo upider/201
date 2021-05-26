@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: 201webservice
+
+  data:
+    mongodb:
+      host: 10.8.0.10
+      port: 27017
+
+server:
+  port: 8080
