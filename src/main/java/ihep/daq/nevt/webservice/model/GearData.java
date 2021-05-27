@@ -17,12 +17,13 @@ public class GearData {
     public GearData() {
         this.data = new LinkedList<>();
         for (int i = 0; i < 10; i++) {
-            TempHeight tempHeight = new TempHeight(i * 10 , (i + 1)*10);
+            TempHeight tempHeight = new TempHeight(i * 10 , (i + 1)*10 - 1);
+            this.data.add(tempHeight);
         }
     }
 
-    public void incrementHeightTotal(int h) {
-        heightTotal += h;
+    public void incrementHeightTotal(double h) {
+        this.heightTotal += h;
     }
 
     @Override
@@ -30,8 +31,7 @@ public class GearData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GearData gearData = (GearData) o;
-        return gear == gearData.gear &&
-                Objects.equals(data, gearData.data);
+        return gear == gearData.gear;
     }
 
     @Override
@@ -47,12 +47,14 @@ class TempHeight {
     private double toTemp;
     private double height;
 
+    public TempHeight() { }
+
     public TempHeight(double fromTemp, double toTemp) {
         this.fromTemp = fromTemp;
         this.toTemp = toTemp;
     }
 
     public void incrementHeight(double h) {
-        height += h;
+        this.height += h;
     }
 }
