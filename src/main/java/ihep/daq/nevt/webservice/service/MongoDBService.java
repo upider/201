@@ -4,6 +4,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import ihep.daq.nevt.webservice.model.*;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class MongoDBService {
     private final MongoDBManager mongoDBManager;
 
@@ -37,14 +39,10 @@ public class MongoDBService {
 
         int skip = numPerPage*(pageIndex-1);
 
-        long totalRecord = collection.countDocuments();
-
         FindIterable<Document> findIterable = collection.find(filter).skip(skip).limit(numPerPage);
 
         Data201VO data201VO = new Data201VO();
         Table table = new Table();
-        table.setTotalElements(totalRecord);
-        table.setTotalPages(Math.round(totalRecord / (float) numPerPage));
         Stat stat = new Stat(0, Float.MIN_VALUE, Float.MAX_VALUE);
         float cnt = 0;
         float total = 0;
@@ -62,9 +60,14 @@ public class MongoDBService {
             graphTemp.addTempData(doc);
         }
 
+        table.setTotalPages(Math.round(cnt / (float) numPerPage));
+        table.setTotalElements((long) cnt);
+
         graphGear.calculateHeight();
         graphTemp.calculateHeight();
-        stat.setVibrate_avg(total / cnt);
+        if (total != 0) {
+            stat.setVibrate_avg(total / cnt);
+        }
         data201VO.setGraphGear(graphGear);
         data201VO.setStat(stat);
         data201VO.setGraphTemp(graphTemp);
