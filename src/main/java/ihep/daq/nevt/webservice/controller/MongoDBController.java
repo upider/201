@@ -1,14 +1,12 @@
 package ihep.daq.nevt.webservice.controller;
 
 import ihep.daq.nevt.webservice.model.Data201VO;
+import ihep.daq.nevt.webservice.model.GetDataRequest;
 import ihep.daq.nevt.webservice.service.MongoDBService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -26,14 +24,10 @@ public class MongoDBController {
 
     @PostMapping("getData")
     @ApiOperation(value="查询接口", httpMethod = "POST")
-    public Data201VO getData(@RequestParam(value = "fromTime", required = true) long fromTime,
-                             @RequestParam(value = "toTime", required = true) long toTime,
-                             @RequestParam(value = "fromTemp", required = true) double fromTemp,
-                             @RequestParam(value = "toTemp", required = true) double toTemp,
-                             @RequestParam(value = "fromGear", required = true) int fromGear,
-                             @RequestParam(value = "toGear", required = true) int toGear,
-                             @RequestParam(value = "pageIndex", required = true) int pageIndex,
-                             @RequestParam(value = "numPerPage", required = true) int numPerPage) {
-        return mongoDBService.getData(fromTime, toTime, fromTemp, toTemp, fromGear, toGear, pageIndex, numPerPage);
+    public Data201VO getData(@RequestBody GetDataRequest req) {
+        System.out.println(req);
+        return mongoDBService.getData(req.getFromTime(), req.getToTime(), req.getFromTemp(), req.getToTemp(),
+                req.getFromGear(), req.getToGear(), req.getPageIndex(), req.getNumPerPage());
     }
+
 }

@@ -31,7 +31,6 @@ public class GraphGear {
 
     public void addGearData(Document document) {
         double temperature = document.getDouble("temperature");
-        log.info("temperature = " + temperature);
         int gear = document.getInteger("gear");
         Iterator<GearData> it = this.data.iterator();
         while(it.hasNext()) {

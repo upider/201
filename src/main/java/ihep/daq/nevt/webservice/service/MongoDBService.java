@@ -39,29 +39,36 @@ public class MongoDBService {
 
         int skip = numPerPage*(pageIndex-1);
 
+        Table table = new Table();
+        double cnt = 0;
+        FindIterable<Document> it = collection.find(filter);
+        for (Document doc : it) {
+            table.addData(doc);
+            cnt++;
+        }
+        table.setTotalPages(Math.round(cnt / (double) numPerPage));
+        table.setTotalElements((long) cnt);
+
         FindIterable<Document> findIterable = collection.find(filter).skip(skip).limit(numPerPage);
 
         Data201VO data201VO = new Data201VO();
-        Table table = new Table();
-        Stat stat = new Stat(0, Float.MIN_VALUE, Float.MAX_VALUE);
-        float cnt = 0;
-        float total = 0;
+
+        Stat stat = new Stat(0D, Double.MIN_VALUE, Double.MAX_VALUE);
+
         GraphGear graphGear = new GraphGear();
         GraphTemp graphTemp = new GraphTemp();
 
+        cnt = 0;
+        double total = 0;
         for (Document doc : findIterable) {
             cnt++;
             total += doc.getDouble("vibrate_avg");
             stat.setVibrate_max(Math.max(stat.getVibrate_max(), doc.getDouble("vibrate_max")));
-            stat.setVibrate_max(Math.min(stat.getVibrate_min(), doc.getDouble("vibrate_min")));
+            stat.setVibrate_min(Math.min(stat.getVibrate_min(), doc.getDouble("vibrate_min")));
 
-            table.addData(doc);
             graphGear.addGearData(doc);
             graphTemp.addTempData(doc);
         }
-
-        table.setTotalPages(Math.round(cnt / (float) numPerPage));
-        table.setTotalElements((long) cnt);
 
         graphGear.calculateHeight();
         graphTemp.calculateHeight();

@@ -11,7 +11,7 @@ class Stat {
     private double vibrate_max;
     private double vibrate_min;
 
-    public Stat(float vibrate_avg, float vibrate_max, float vibrate_min) {
+    public Stat(Double vibrate_avg, Double vibrate_max, Double vibrate_min) {
         this.vibrate_avg = vibrate_avg;
         this.vibrate_max = vibrate_max;
         this.vibrate_min = vibrate_min;
